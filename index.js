@@ -129,6 +129,7 @@ module.exports = ${mdl.name}Controller;
 
         await  mkdirp.mkdirpSync(`backend/src/controllers/${mdl.name.charAt(0).toUpperCase() + mdl.name.slice(1)}/`)
         fs.writeFileSync(`backend/src/controllers/${mdl.name.charAt(0).toUpperCase() + mdl.name.slice(1)}/index.js`, template)
+        console.log(`🟥 Selph - ${mdl.name} controller generated...`)
     })
 
   } catch (error) {
