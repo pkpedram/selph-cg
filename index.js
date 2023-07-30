@@ -19,10 +19,12 @@ ${
 
 const ${mdl.name}Controller = {
     post: {
-        middlewares: [],
+        middlewares: [
+           ${Object.keys(mdl.model)?.filter(itm => (mdl.model[itm] == "file" || mdl.model[itm] == "File" || mdl.model[itm].type == "file" || mdl.model[itm].type == "File")).length !== 0 ? `       upload('${mdl.name}').fields([${Object.keys(mdl.model)?.filter(itm => (mdl.model[itm] == "file" || mdl.model[itm] == "File" || mdl.model[itm].type == "file" || mdl.model[itm].type == "File")).map(item => `{name: '${item}', maxCount: 1}`)}]),` : ''} 
+        ],
         controller: async (req, res, next) => {
             try{
-                let ${mdl.name} = new ${mdl.name.charAt(0).toUpperCase() + mdl.name.slice(1)}({${Object.keys(mdl.model)?.map(item => `\n                      ${item}: req.body.${item}`)},${typeof config.baseModel == 'object' ? Object.keys(config.baseModel)?.map(item => config.baseModel[item]?.hasOwnProperty('default') ? 
+                let ${mdl.name} = new ${mdl.name.charAt(0).toUpperCase() + mdl.name.slice(1)}({${Object.keys(mdl.model)?.filter(itm => (mdl.model[itm] != "file" & mdl.model[itm] != "File" & mdl.model[itm].type != "file" & mdl.model[itm].type != "File"))?.map(item => `\n                      ${item}: req.body.${item}`)}${Object.keys(mdl.model)?.filter(itm => (mdl.model[itm] == "file" || mdl.model[itm] == "File" || mdl.model[itm].type == "file" || mdl.model[itm].type == "File"))?.map((item, idx) => `${idx == 0 ? ',' : ''}\n                      ${item}: generateFileName(req.files.${item}[0], '${mdl.name}')`)},${typeof config.baseModel == 'object' ? Object.keys(config.baseModel)?.map(item => config.baseModel[item]?.hasOwnProperty('default') ? 
                 `\n                      ${item}: ${typeof config.baseModel[item]?.default == 'string' ? config.baseModel[item]?.default : `req.body.${item}`}`
                 :
                 `\n                      ${item}: req.body.${item}`) : ''}
@@ -75,12 +77,20 @@ const ${mdl.name}Controller = {
         }
     },
     put: {
-        middlewares: [],
+        middlewares: [
+           ${Object.keys(mdl.model)?.filter(itm => (mdl.model[itm] == "file" || mdl.model[itm] == "File" || mdl.model[itm].type == "file" || mdl.model[itm].type == "File")).length !== 0 ? `       upload('${mdl.name}').fields([${Object.keys(mdl.model)?.filter(itm => (mdl.model[itm] == "file" || mdl.model[itm] == "File" || mdl.model[itm].type == "file" || mdl.model[itm].type == "File")).map(item => `{name: '${item}', maxCount: 1}`)}]),` : ''} 
+        ],
         controller: async (req, res, next) => {
             try{
                 let id = req.params.id;
                 const ${mdl.name}  = await ${mdl.name.charAt(0).toUpperCase() + mdl.name.slice(1)}.findById(id)
                 if(${mdl.name}){
+                    ${
+                        Object.keys(mdl.model)?.filter(itm => (mdl.model[itm] == "file" || mdl.model[itm] == "File" || mdl.model[itm].type == "file" || mdl.model[itm].type == "File"))?.map(
+                            item => `\n                    ${mdl.name}.${item} = req.files.${item}[0] ? generateFileName(req.files.${item}[0], '${mdl.name}') : ${mdl.name}.${item}`
+                        ).join('')
+                    }
+                    
                     let keys = Object.keys(req.body); 
                     keys.map(item => ${mdl.name}[item] = req.body[item])
                     const updated${mdl.name.charAt(0).toUpperCase() + mdl.name.slice(1)} = await ${mdl.name}.save();
