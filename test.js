@@ -1,7 +1,7 @@
 const cg = require('./index')
 
 let config = {
-
+    saveCreatorUsers: true,
     "modules": [
         {
             "name": "test",
@@ -22,6 +22,14 @@ let config = {
                 "file2": "File",
                 "file3": {type: "file"},
                 "file4": {type: "File"},
+                "user": "user"
+            },
+            "permissions": {
+                "getList": ["user", "self"],
+                "getDetail": ["user"],
+                "post": [],
+                "delete": ["self"],
+                "put": ["self"]
             }
         }
     ],
