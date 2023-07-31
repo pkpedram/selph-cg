@@ -20,7 +20,7 @@ ${
 const ${mdl.name}Controller = {
     post: {
         middlewares: [
-            authenticateJwtToken(['admin',  ${config?.saveCreatorUsers ? `'user'` : ``} ${mdl?.permissions?.post ? mdl?.permissions?.post?.map(item => `"${item}"`): ''}]),
+            authenticateJwtToken(['admin',  ${config?.saveCreatorUsers ? `'user',` : ``} ${mdl?.permissions?.post ? mdl?.permissions?.post?.map(item => `"${item}"`): ''}]),
            ${Object.keys(mdl.model)?.
             filter(itm => (mdl.model[itm] == "file" || mdl.model[itm] == "File" || mdl.model[itm].type == "file" || mdl.model[itm].type == "File")).
             length !== 0 ? `       upload('${mdl.name}').fields([${Object.keys(mdl.model)?.filter(itm => (mdl.model[itm] == "file" || mdl.model[itm] == "File" || mdl.model[itm].type == "file" || mdl.model[itm].type == "File")).map(item => `{name: '${item}', maxCount: 1}`)}]),` : ''} 
